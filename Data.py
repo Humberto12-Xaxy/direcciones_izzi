@@ -25,6 +25,11 @@ class Data:
 
         for i, address in enumerate(list_address):
             self.sheet.cell(column=16, row= i+1, value= address[0])
+            self.sheet.cell(column=17, row= i+1, value= address[1])
+            self.sheet.cell(column=18, row= i+1, value= address[2])
+            self.sheet.cell(column=19, row= i+1, value= address[3])
+            self.sheet.cell(column=20, row= i+1, value= address[4])
+            self.sheet.cell(column=21, row= i+1, value= address[5])
 
         self.excel_document.save('./Chihuahua1.xlsx')
 

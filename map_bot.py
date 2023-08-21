@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver import ActionChains
 from time import sleep
 
 
@@ -35,7 +36,7 @@ class MapBot(webdriver.Chrome):
 
         next_button = self.find_element(By.XPATH, '//*[@id="idSIButton9"]')
         next_button.click()
-        sleep(1)
+        sleep(5)
 
     def fill_password_input(self, password:str):
        
@@ -45,7 +46,7 @@ class MapBot(webdriver.Chrome):
        
         login_button = self.find_element(By.XPATH, '//*[@id="idSIButton9"]')
         login_button.click()
-        sleep(1)
+        sleep(5)
 
     def click_to_maintain_session(self):
        
@@ -58,7 +59,9 @@ class MapBot(webdriver.Chrome):
     def seach_address(self, list_address:list):
         
         all_address = []
+        self.close_searcher()
         for address in list_address:
+            
             search_input = self.find_element(By.XPATH, '//*[@id="esri_dijit_Search_0_input"]')
             search_input.send_keys(address)
             sleep(1)
@@ -67,37 +70,85 @@ class MapBot(webdriver.Chrome):
             search_button.click()
             sleep(1)
 
-            search_input.clear()
-            sleep(7)
+            self.add_a_maker()
+            self.click_maker()
+            all_address.append(self.get_data())
 
-            address = self.get_address_complete()
-            all_address.append(address)
+            search_input.clear()
+            sleep(1)
+
         
         return all_address
 
+    def search_one_address(self, address:str):
+        search_input = self.find_element(By.XPATH, '//*[@id="esri_dijit_Search_0_input"]')
+        search_input.send_keys(address)
+        sleep(1)
 
+        search_button = self.find_element(By.XPATH, '//*[@id="esri_dijit_Search_0"]/div/div[2]')
+        search_button.click()
+        sleep(3)
+
+        self.add_a_maker()
+        self.click_maker()
+        self.get_data()
+
+        search_input.clear()
+        sleep(1)
+
+    def add_a_maker(self):
+
+        points = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[3]/div/div/span')
+        points.click()
+        sleep(15)
+
+        add_maker = self.find_element(By.XPATH, '//html/body/div[4]/div/div[2]/div[2]')
+        add_maker.click()
+        sleep(10)
+
+    def click_maker(self):
+
+        action = ActionChains(self)
+        maker = self.find_element(By.XPATH, '//div[@id="map_gc"]//*[@id="marker-feature-action-layer_layer"]')
+        action.move_to_element(maker).click().perform()
+        # maker.click()
+        sleep(2)
+
+        head_maker = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[1]/div/div[2]')
+        print(head_maker.text)
+        if head_maker.text == '(1 of 4)' or head_maker.text == '(1 of 3)':
+
+            next_button = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[1]/div/div[4]')
+            next_button.click()
+            sleep(2)
+            next_button.click()
+            sleep(2)
+
+        elif head_maker.text == '(1 of 2)':
+
+            next_button = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[1]/div/div[4]')
+            next_button.click()
+            sleep(2)
     
-    def get_address_complete(self):
+    def get_data(self):
         
-        list_address = []
-        full_address = ''
-        address = self.find_element(By.XPATH, '//*[@id="esri_dijit_Search_0_more_results"]/div[1]')
-        full_address = address.text
-        # En este caso voy a verificar si esta etiqueta contiene mas elementos
-        more_items = self.find_element(By.XPATH, '//*[@id="esri_dijit_Search_0_more_results"]/div[2]')
+        name = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[1]/td[2]')
+        sleep(1)
+        hub = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[2]/td[2]')
+        sleep(1)
+        rama = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[3]/td[2]')
+        sleep(1)
+        nodo = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[4]/td[2]')
+        sleep(1)
+        x_tt_hfc_flg = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[5]/td[2]')
+        sleep(1)
+        x_tt_rpt_codigo = self.find_element(By.XPATH, '//*/table[@class="attrTable"]//*/td/span')
+        sleep(1)
 
-        if more_items.text:
-            a_more_items = self.find_element(By.XPATH, '//*[@id="esri_dijit_Search_0_more_results_show"]')
-            a_more_items.click()
-            sleep(3)
-
-            items = self.find_element(By.XPATH, '//*[@id="esri_dijit_Search_0_more_results_list"]/ul')  
-            full_address = f'{full_address}, {items.text}'
-            print(full_address) 
-            list_address.append(full_address)
-        
-        else:
-            print(full_address) 
-            list_address.append(full_address)
-
-        return list_address
+        return [name.text, hub.text, rama.text, nodo.text, x_tt_hfc_flg.text, x_tt_rpt_codigo.text]
+    
+    def close_searcher(self):
+        action = ActionChains(self)
+        close_button = self.find_element(By.XPATH, '//*[@id="_7_panel"]/div[1]/div/div[3]')
+        action.move_to_element(close_button).click().perform()
+        sleep(3)

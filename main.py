@@ -20,6 +20,7 @@ if __name__ == '__main__':
 
         data = Data('./Chihuahua1.xlsx')
         list_address = data.get_address()
+        # map_bot.search_one_address(list_address[7])
         all_address = map_bot.seach_address(list_address)
-
+        print(all_address)
         data.add_address_to_excel(all_address)
