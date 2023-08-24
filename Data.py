@@ -22,16 +22,15 @@ class Data:
 
     def add_address_to_excel(self, list_address:list):
 
+        try:
 
-        for i, address in enumerate(list_address):
-            self.sheet.cell(column=16, row= i+1, value= address[0])
-            self.sheet.cell(column=17, row= i+1, value= address[1])
-            self.sheet.cell(column=18, row= i+1, value= address[2])
-            self.sheet.cell(column=19, row= i+1, value= address[3])
-            self.sheet.cell(column=20, row= i+1, value= address[4])
-            self.sheet.cell(column=21, row= i+1, value= address[5])
+            for i, address in enumerate(list_address):
+                self.sheet.cell(column=16, row= i+1, value= address)
 
-        self.excel_document.save('./Chihuahua1.xlsx')
+                self.excel_document.save('./Chihuahua1.xlsx')
+                
+        except Exception as e:
+            print(e)
 
     
 if __name__ == '__main__':
