@@ -112,7 +112,7 @@ class MapBot(webdriver.Chrome):
         
         try:
             head = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[1]/div/div[2]')
-            if (head.text == '(2 of 2)' or head.text == '(3 of 3)' or head.text == '(3 of 4)') or flag == 'Name':
+            if (head.text == '(2 of 2)' or head.text == '(3 of 3)' or head.text == '(3 of 4)' or head.text == '(2 of 3)') or flag == 'Name':
                 name = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[1]/td[2]')
                 # sleep(.5)
                 hub = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[2]/td[2]')
@@ -150,7 +150,7 @@ class MapBot(webdriver.Chrome):
         if (head.text == '(1 of 2)' or head.text == '(1 of 3)' or head.text == '(1 of 4)' ) and self.label_name() == 'Name':
             self.next_button()
         
-        if (head.text == '(2 of 2)' or head.text == '(3 of 3)' or head.text == '(3 of 4)') and self.label_name() == 'Name':
+        if (head.text == '(2 of 2)' or head.text == '(3 of 3)' or head.text == '(3 of 4)' or head.text == '(2 of 3)') and self.label_name() == 'Name':
             self.prev_button()
         
 
@@ -176,8 +176,9 @@ class MapBot(webdriver.Chrome):
             next_button = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[1]/div/div[4]')
             next_button.click()
             sleep(.5)
-            next_button.click()
-            sleep(.5)
+            if head_maker.text == '(2 of 3)' and self.label_name() != 'Name':
+                next_button.click()
+                sleep(.5)
 
         elif head_maker.text == '(1 of 2)' and self.label_name() != 'Name':
 
@@ -191,10 +192,6 @@ class MapBot(webdriver.Chrome):
             next_button.click()
             sleep(.5)
         
-        elif head_maker.text == '(2 of 3)' and self.label_name() == 'Name':
-            next_button = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[1]/div/div[4]')
-            next_button.click()
-            sleep(.5)
     
     def input_search(self, address):
         search_input = self.find_element(By.XPATH, '//*[@id="esri_dijit_Search_0_input"]')
