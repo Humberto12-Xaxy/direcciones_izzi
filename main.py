@@ -22,7 +22,7 @@ if __name__ == '__main__':
         map_bot.click_to_maintain_session()
         map_bot.change_window(0)
         
-        data = Data('./Chihuahua1.xlsx')
+        data = Data('./Chihuahua.xlsx')
         list_address = data.get_address()
         # ARROYO EL ALAMO 16701,31000
         # map_bot.search_one_address('ARROYO EL SACRAMENTO 16512,31109')
