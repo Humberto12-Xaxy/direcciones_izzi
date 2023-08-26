@@ -106,10 +106,10 @@ class MapBot(webdriver.Chrome):
     
     def get_data(self):
         flag = self.label_name()
-        if self.label_name() != 'Name':
-            print('xd')
+        if flag != 'Name':
             self.next_button()
         
+        sleep(10)
         try:
             head = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[1]/div/div[2]')
             if (head.text == '(2 of 2)' or head.text == '(3 of 3)' or head.text == '(3 of 4)' or head.text == '(2 of 3)') or flag == 'Name':
@@ -154,6 +154,7 @@ class MapBot(webdriver.Chrome):
             self.prev_button()
         
 
+
         points = self.find_element(By.XPATH, '//div[@class="sizer"]//*/span[@class="popup-menu-button"]')
         points.click()
         sleep(1)
@@ -176,7 +177,7 @@ class MapBot(webdriver.Chrome):
             next_button = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[1]/div/div[4]')
             next_button.click()
             sleep(.5)
-            if head_maker.text == '(2 of 3)' and self.label_name() != 'Name':
+            if (head_maker.text == '(2 of 3)' or head_maker.text == '(2 of 4)') and self.label_name() != 'Name':
                 next_button.click()
                 sleep(.5)
 
@@ -200,10 +201,10 @@ class MapBot(webdriver.Chrome):
 
         search_button = self.find_element(By.XPATH, '//*[@id="esri_dijit_Search_0"]/div/div[2]')
         search_button.click()
-        sleep(2)
+        sleep(.5)
 
         search_input.clear()
-        
+        sleep(1.5)      
     
     def label_name(self):
 
