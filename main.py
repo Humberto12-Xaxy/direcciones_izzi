@@ -1,5 +1,5 @@
 from Data import Data
-from map_bot import MapBot
+from map_bot_copy import MapBot
 import os
 from dotenv import load_dotenv
 from time import sleep
@@ -27,5 +27,5 @@ if __name__ == '__main__':
         # ARROYO EL ALAMO 16701,31000
         # map_bot.search_one_address('ARROYO EL SACRAMENTO 16512,31109')
 
-        all_address = map_bot.search_address(list_address)
+        all_address = map_bot.search_address([list_address[15]])
         data.add_address_to_excel(all_address)
