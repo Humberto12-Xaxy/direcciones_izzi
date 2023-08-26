@@ -110,7 +110,7 @@ class MapBot(webdriver.Chrome):
         
         if self.head_label() != ' ':
             while self.header_table_label() == None:
-                if self.head_label() != '(3 of 3)' or self.head_label() != '(4 of 4)':
+                if self.head_label() != '(3 of 3)' or self.head_label() != '(4 of 4)' or self.head_label() != '(2 of 2)':
                     self.next_button()
                 else:
                     break
