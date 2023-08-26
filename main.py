@@ -1,5 +1,5 @@
 from Data import Data
-from map_bot import MapBot
+from map_bot_copy import MapBot
 import os
 from dotenv import load_dotenv
 from time import sleep
