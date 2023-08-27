@@ -30,7 +30,7 @@ class Data:
                 elif i+1 > 1:
                     self.sheet.cell(column=16, row= i+1, value= address)
 
-                self.excel_document.save('./Chihuahua1.xlsx')
+                self.excel_document.save('./Chihuahua.xlsx')
                 
         except Exception as e:
             print(e)
