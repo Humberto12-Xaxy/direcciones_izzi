@@ -78,17 +78,22 @@ class MapBot(webdriver.Chrome):
 
         self.input_search(address)
 
-        self.add_a_maker()
-        self.click_maker()
-    
-        data = self.get_data()
-        self.delete_marker()
+        if self.no_results() != 'No results':
 
-        return data
+            self.add_a_maker()
+            self.click_maker()
+        
+            data = self.get_data()
+            self.delete_marker()
+
+            return data
+        
+        return None
 
 
     def add_a_maker(self):
-
+        
+        sleep(1.5)
         points = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[3]/div/div/span')
         points.click()
         sleep(6)
@@ -214,5 +219,14 @@ class MapBot(webdriver.Chrome):
             
             return longitude_label.text
         
+        except Exception as e:
+            return None
+    
+    def no_results(self):
+        try:
+            data = self.find_element(By.XPATH, '//*/div[@class="noResultsBody"]/div[1]')
+
+            return data.text
+
         except Exception as e:
             return None
