@@ -27,5 +27,5 @@ if __name__ == '__main__':
         # ARROYO EL ALAMO 16701,31000
         # map_bot.search_one_address('ARROYO EL SACRAMENTO 16512,31109')
 
-        all_address = map_bot.search_address([list_address[15]])
+        all_address = map_bot.search_address(list_address)
         data.add_address_to_excel(all_address)
