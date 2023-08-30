@@ -25,12 +25,10 @@ class Data:
         try:
 
             for i, address in enumerate(list_address):
-                if i+1 == 1:
-                    self.sheet.cell(column=16, row=i+1, value= 'Tipo de cobertura')
-                elif i+1 > 1:
-                    self.sheet.cell(column=16, row= i+1, value= address)
 
-                self.excel_document.save('./Chihuahua.xlsx')
+                self.sheet.cell(column=15, row= i+1, value= address)
+
+                self.excel_document.save('./Muestra Att Nickmare 29082023.xlsx')
                 
         except Exception as e:
             print(e)

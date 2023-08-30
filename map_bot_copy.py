@@ -75,20 +75,25 @@ class MapBot(webdriver.Chrome):
         return all_address
 
     def search_one_address(self, address:str):
+        if address != ',':
+            self.input_search(address)
 
-        self.input_search(address)
+            if self.no_results() != 'No results':
 
-        self.add_a_maker()
-        self.click_maker()
-    
-        data = self.get_data()
-        self.delete_marker()
+                self.add_a_maker()
+                self.click_maker()
+            
+                data = self.get_data()
+                self.delete_marker()
 
-        return data
+                return data
+        
+        return None
 
 
     def add_a_maker(self):
-
+        
+        sleep(1.5)
         points = self.find_element(By.XPATH, '//*[@id="map_root"]/div[3]/div[1]/div[3]/div/div/span')
         points.click()
         sleep(6)
@@ -106,40 +111,33 @@ class MapBot(webdriver.Chrome):
       
     
     def get_data(self):
-        
-        
+     
         if self.head_label() != ' ':
             while self.header_table_label() == None:
-                if self.head_label() != '(3 of 3)' or self.head_label() != '(4 of 4)' :
-                    if  self.head_label() == '(2 of 2)':
-                        break
-                    self.next_button()
-        
-            
+                if self.head_label() == '(2 of 2)' or self.head_label() == '(3 of 3)' or self.head_label() == '(4 of 4)' or self.head_label() == '(5 of 5)':
+                    break
+                                
+                self.next_button()
+
             final_value = None
             
             try:
+                if self.header_table_label() != None:    
+                    name = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[1]/td[2]')
+                    hub = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[2]/td[2]')
+                    rama = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[3]/td[2]')
+                    nodo = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[4]/td[2]')
+                    x_tt_hfc_flg = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[5]/td[2]')
+                    x_tt_rpt_codigo = self.find_element(By.XPATH, '//*/table[@class="attrTable"]//*/td/span')
+                    sleep(.5)
                     
-                name = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[1]/td[2]')
-                # sleep(.5)
-                hub = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[2]/td[2]')
-                # sleep(.5)
-                rama = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[3]/td[2]')
-                # sleep(.5)
-                nodo = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[4]/td[2]')
-                # sleep(.5)
-                x_tt_hfc_flg = self.find_element(By.XPATH, '//*/div[@class= "esriPopupWrapper"]//*/div[@class="mainSection"]//*/table[@class="attrTable"]/tr[5]/td[2]')
-                # sleep(.5)
-                x_tt_rpt_codigo = self.find_element(By.XPATH, '//*/table[@class="attrTable"]//*/td/span')
-                sleep(.5)
-                
-                final_value = f'Name: {name.text}, HUB: {hub.text}, Rama: {rama.text}, Nodo: {nodo.text}, X_TT_HFC_FLG: {x_tt_hfc_flg.text}, X_TT_RPT_CODIGO: {x_tt_rpt_codigo.text}'
-                print(final_value)
+                    final_value = f'Name: {name.text}, HUB: {hub.text}, Rama: {rama.text}, Nodo: {nodo.text}, X_TT_HFC_FLG: {x_tt_hfc_flg.text}, X_TT_RPT_CODIGO: {x_tt_rpt_codigo.text}'
+                    print(final_value)
 
-                if self.head_label() == '(2 of 2)' or self.head_label() == '(2 of 3)' or self.head_label() == '(3 of 3)' or self.head_label() == '(3 of 4)' or self.head_label() == '(4 of 4)':
+                if self.head_label() == '(2 of 2)' or self.head_label() == '(2 of 3)' or self.head_label() == '(3 of 3)' or self.head_label() == '(2 of 4)' or self.head_label() == '(3 of 4)' or self.head_label() == '(4 of 4)'  or self.head_label() == '(2 of 5)' or self.head_label() == '(3 of 5)' or self.head_label() == '(4 of 5)' or self.head_label() == '(5 of 5)':
                     while self.flag_remove_marker() == None:
                         self.prev_button()
-                elif self.head_label() == '(1 of 2)' and final_value != None:
+                elif (self.head_label() == '(1 of 2)' or self.head_label() == '(1 of 3)' or self.head_label() == '(1 of 4)' or self.head_label() == '(1 of 5)') and final_value != None:
                     while self.flag_remove_marker() == None:
                         self.next_button()
                     
@@ -214,5 +212,14 @@ class MapBot(webdriver.Chrome):
             
             return longitude_label.text
         
+        except Exception as e:
+            return None
+    
+    def no_results(self):
+        try:
+            data = self.find_element(By.XPATH, '//*/div[@class="noResultsBody"]/div[1]')
+
+            return data.text
+
         except Exception as e:
             return None
